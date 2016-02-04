@@ -24,6 +24,11 @@ public class FloatingButtonService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        final String packageName = intent.getStringExtra("PACKAGE_NAME");
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
         floatingButton = new ImageView(this);
@@ -59,8 +64,7 @@ public class FloatingButtonService extends Service {
                         touchY = event.getRawY();
                         return true;
                     case MotionEvent.ACTION_UP:
-                        startActivity(getPackageManager().getLaunchIntentForPackage("cyource.manasrawat.cycripter"));
-                        //stopService(new Intent(getApplicationContext(), FloatingButtonService.class));
+                        startActivity(getPackageManager().getLaunchIntentForPackage(packageName));
                         return false;
                     case MotionEvent.ACTION_MOVE:
                         params.x = x + (int) (event.getRawX() - touchX);
@@ -72,6 +76,7 @@ public class FloatingButtonService extends Service {
                 return false;
             }
         });
+        return START_STICKY;
     }
 
     @Override
