@@ -26,7 +26,7 @@ public class Overfloat extends AppCompatActivity {
             String appName = packageInfo.applicationInfo.loadLabel(getPackageManager()).toString();
             final String packageName = packageInfo.packageName;
             LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
-            TextView textView = new TextView(this);
+            final TextView textView = new TextView(this);
             textView.setText(appName);
             textView.setTextSize(18);
             textView.setClickable(true);
@@ -56,7 +56,7 @@ public class Overfloat extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     stopService(intent);
-                    imageView.setVisibility(View.GONE);
+                    imageView.setVisibility(View.INVISIBLE);
                 }
             });
         }

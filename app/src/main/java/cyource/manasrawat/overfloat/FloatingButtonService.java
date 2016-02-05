@@ -49,26 +49,31 @@ public class FloatingButtonService extends Service {
         windowManager.addView(floatingButton, params);
 
         floatingButton.setOnTouchListener(new View.OnTouchListener() {
-            int x;
-            int y;
+            int intX;
+            int intY;
             float touchX;
             float touchY;
+            float distanceX;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        x = params.x;
-                        y = params.y;
+                        intX = params.x;
+                        intY = params.y;
                         touchX = event.getRawX();
                         touchY = event.getRawY();
+                        distanceX = event.getX();
                         return true;
                     case MotionEvent.ACTION_UP:
-                        startActivity(getPackageManager().getLaunchIntentForPackage(packageName));
+                        float distance = distanceX - event.getX();
+                        if (distance == 0) {
+                            startActivity(getPackageManager().getLaunchIntentForPackage(packageName));
+                        }
                         return false;
                     case MotionEvent.ACTION_MOVE:
-                        params.x = x + (int) (event.getRawX() - touchX);
-                        params.y = y + (int) (event.getRawY() - touchY);
+                        params.x = intX + (int) (event.getRawX() - touchX);
+                        params.y = intY + (int) (event.getRawY() - touchY);
                         windowManager.updateViewLayout(floatingButton, params);
                         return true;
 
