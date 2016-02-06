@@ -1,5 +1,7 @@
 package cyource.manasrawat.overfloat;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
@@ -27,11 +29,12 @@ public class FloatingButtonService extends Service {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(Intent intent, int flags, final int startId) {
         final String packageName = intent.getStringExtra("PACKAGE_NAME");
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-
         floatingButton = new ImageView(this);
+        floatingButton.setX(-100);
+        floatingButton.animate().translationX(0);
         floatingButton.setImageResource(R.mipmap.openfloat);
         floatingButton.setLayoutParams(new LinearLayout.LayoutParams(5, 5));
 
@@ -47,6 +50,14 @@ public class FloatingButtonService extends Service {
         params.y = 100;
 
         windowManager.addView(floatingButton, params);
+
+        floatingButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                stopSelf();
+                return true;
+            }
+        });
 
         floatingButton.setOnTouchListener(new View.OnTouchListener() {
             int intX;
@@ -64,19 +75,17 @@ public class FloatingButtonService extends Service {
                         touchX = event.getRawX();
                         touchY = event.getRawY();
                         distanceX = event.getX();
-                        return true;
+                        return false;
                     case MotionEvent.ACTION_UP:
                         float distance = distanceX - event.getX();
-                        if (distance == 0) {
+                        if (distance == 0)
                             startActivity(getPackageManager().getLaunchIntentForPackage(packageName));
-                        }
                         return false;
                     case MotionEvent.ACTION_MOVE:
                         params.x = intX + (int) (event.getRawX() - touchX);
                         params.y = intY + (int) (event.getRawY() - touchY);
                         windowManager.updateViewLayout(floatingButton, params);
                         return true;
-
                 }
                 return false;
             }
@@ -88,7 +97,13 @@ public class FloatingButtonService extends Service {
     public void onDestroy() {
         super.onDestroy();
         if (floatingButton != null) {
-            windowManager.removeView(floatingButton);
+            floatingButton.animate().alpha(0.0f).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                    super.onAnimationCancel(animation);
+                    windowManager.removeView(floatingButton);
+                }
+            });
         }
     }
 }

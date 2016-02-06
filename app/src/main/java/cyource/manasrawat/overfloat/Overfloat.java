@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,6 +19,7 @@ public class Overfloat extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.overfloat);
+        setSupportActionBar((android.support.v7.widget.Toolbar) findViewById(R.id.toolbar));
         List<PackageInfo> appsList = getPackageManager().getInstalledPackages(PackageManager.GET_META_DATA);
         for (int i = 0; i < appsList.size(); i++) {
             PackageInfo packageInfo = appsList.get(i);
@@ -35,28 +35,18 @@ public class Overfloat extends AppCompatActivity {
             textView.setBackgroundResource(typedValue.resourceId);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 50);
             int bottom = 0;
-            if (i == appsList.size() - 1) {
+            if (i == appsList.size() - 1)
                 bottom = 40;
-            }
             layoutParams.setMargins(40, 40, 40, bottom);
-            if (getPackageManager().getLaunchIntentForPackage(packageName) != null) {
+            if (getPackageManager().getLaunchIntentForPackage(packageName) != null)
                 linearLayout.addView(textView, layoutParams);
-            }
             final Intent intent = new Intent(getApplicationContext(), FloatingButtonService.class);
-            final ImageView imageView = (ImageView) findViewById(R.id.imageView);
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    stopService(intent);
                     startService(intent.
                             putExtra("PACKAGE_NAME", packageName));
-                    imageView.setVisibility(View.VISIBLE);
-                }
-            });
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    stopService(intent);
-                    imageView.setVisibility(View.INVISIBLE);
                 }
             });
         }
