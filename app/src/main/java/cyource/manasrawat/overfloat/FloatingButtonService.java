@@ -35,7 +35,7 @@ public class FloatingButtonService extends Service {
         floatingButton = new ImageView(this);
         floatingButton.setX(-100);
         floatingButton.animate().translationX(0);
-        floatingButton.setImageResource(R.mipmap.openfloat);
+        floatingButton.setImageResource(R.mipmap.floatingbutton);
         floatingButton.setLayoutParams(new LinearLayout.LayoutParams(5, 5));
 
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
