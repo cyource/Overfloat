@@ -15,12 +15,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class Overfloat extends AppCompatActivity {
+public class Core extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.overfloat);
+        setContentView(R.layout.layout);
         setSupportActionBar((android.support.v7.widget.Toolbar) findViewById(R.id.toolbar));
         List<PackageInfo> appsList = getPackageManager().getInstalledPackages(PackageManager.GET_META_DATA);
         Collections.sort(appsList, new Comparator<PackageInfo>() {
@@ -48,7 +48,7 @@ public class Overfloat extends AppCompatActivity {
             layoutParams.setMargins(40, 40, 40, 0);
             if (getPackageManager().getLaunchIntentForPackage(packageName) != null)
                 linearLayout.addView(textView, layoutParams);
-            final Intent intent = new Intent(getApplicationContext(), FloatingButtonService.class);
+            final Intent intent = new Intent(getApplicationContext(), Run.class);
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

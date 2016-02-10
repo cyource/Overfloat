@@ -2,7 +2,6 @@ package cyource.manasrawat.overfloat;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
@@ -13,7 +12,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-public class FloatingButtonService extends Service {
+public class Run extends android.app.Service {
 
     private WindowManager windowManager;
     private ImageView floatingButton;
