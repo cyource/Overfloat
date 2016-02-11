@@ -53,6 +53,8 @@ public class Run extends android.app.Service {
         floatingButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                floatingButton.setOnLongClickListener(null);
+                floatingButton.setOnTouchListener(null);
                 stopSelf();
                 return true;
             }
