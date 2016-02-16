@@ -29,6 +29,30 @@
 
 
         <android.support.v7.widget.CardView
+            android:id="@+id/card2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:clickable="true"
+            app:cardCornerRadius="2dp">
+
+            <Button
+                android:gravity="center"
+                android:layout_margin="10dp"
+                android:id="@+id/start"
+                android:text="START"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="@color/accent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
             android:id="@+id/card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
