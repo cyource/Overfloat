@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.facebook.rebound.SimpleSpringListener;
@@ -29,7 +30,6 @@ public class Run extends Service {
 
     private WindowManager windowManager;
     private ImageView floatingButton;
-    private LinearLayout linearLayout;
     private ImageView removeView;
     private float scale;
     private Spring spring;
@@ -37,6 +37,7 @@ public class Run extends Service {
     private int i;
     private ArrayList<String> packageNames;
     private ArrayList<String> appNames;
+    private ScrollView scrollView;
 
 
     @Override
@@ -69,7 +70,7 @@ public class Run extends Service {
         removeView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.accent));
         removeView.setImageResource(R.drawable.ic_close_white_36dp);
         removeView.setVisibility(View.GONE);
-        removeView.setPadding(20, 20, 20, 20);
+        removeView.setPadding(10, 10, 10, 10);
         removeView.setY(-100);
         removeView.setBackgroundResource(typedValue.resourceId);
         removeView.setOnClickListener(new View.OnClickListener() {
@@ -81,10 +82,13 @@ public class Run extends Service {
             }
         });
 
-        linearLayout = new LinearLayout(this);
+        scrollView = new ScrollView(this);
+
+
+        LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
 
-        if (appNames.isEmpty()){
+        if (appNames.isEmpty()) {
             TextView emptyView = new TextView(this);
             emptyView.setTextSize(20);
             emptyView.setPadding(20, 20, 20, 20);
@@ -98,7 +102,7 @@ public class Run extends Service {
             textView.setTextSize(20);
             textView.setPadding(20, 20, 20, 20);
             textView.setBackgroundResource(typedValue.resourceId);
-            textView.setGravity(Gravity.CENTER_HORIZONTAL);
+            textView.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
             final String a = packageNames.get(i);
             textView.setText(appNames.get(i));
             textView.setOnClickListener(new View.OnClickListener() {
@@ -113,14 +117,13 @@ public class Run extends Service {
             linearLayout.addView(textView);
         }
 
-        linearLayout.setVisibility(View.GONE);
+        scrollView.setVisibility(View.GONE);
         //}
 
         // (WINDOWMANAGER PARAMS) {
 
         params = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
@@ -130,15 +133,14 @@ public class Run extends Service {
         params.dimAmount = 0.6f;
 
         WindowManager.LayoutParams params2 = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT, 480,
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
         params2.gravity = Gravity.CENTER;
 
         WindowManager.LayoutParams params3 = new WindowManager.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, 150,
+                ViewGroup.LayoutParams.MATCH_PARENT, 125,
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
@@ -191,7 +193,7 @@ public class Run extends Service {
                             floatingButton.getLocationOnScreen(position);
                             params.flags &= ~WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
                             params.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-                            linearLayout.setVisibility(View.VISIBLE);
+                            scrollView.setVisibility(View.VISIBLE);
                             removeView.setVisibility(View.VISIBLE);
                             animation(0, true, true, null);
                             drag = true;
@@ -221,10 +223,13 @@ public class Run extends Service {
         });
         //}
 
-        //VIEWS ADDED TO WINDOWMANAGER
-        windowManager.addView(floatingButton, params);
-        windowManager.addView(linearLayout, params2);
-        windowManager.addView(removeView, params3);
+        //VIEWS ADDING
+        scrollView.addView(linearLayout);
+        WindowManager.LayoutParams[] wmlp = {params, params2, params3};
+        View[] v = {floatingButton, scrollView, removeView};
+        for (int i = 0; i < 3; i++) {
+            windowManager.addView(v[i], wmlp[i]);
+        }
 
         return START_STICKY;
     }
@@ -233,7 +238,7 @@ public class Run extends Service {
     public void gone() {
         params.flags |= WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         params.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-        linearLayout.setVisibility(View.GONE);
+        scrollView.setVisibility(View.GONE);
         animation(-100, true, true, null);
         spring.setEndValue(1.0);
     }
@@ -283,7 +288,7 @@ public class Run extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        View[] list = {floatingButton, linearLayout};
+        View[] list = {floatingButton, scrollView};
         for (int i = 0; i <= 1; i++)
             animation(0, false, false, list[i]);
         animation(-100, false, true, null);
