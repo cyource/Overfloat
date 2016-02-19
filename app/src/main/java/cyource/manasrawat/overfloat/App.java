@@ -5,7 +5,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +29,6 @@ public class App extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout);
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         final List<PackageInfo> appsList = getPackageManager().getInstalledPackages(PackageManager.GET_META_DATA);
         Collections.sort(appsList, new Comparator<PackageInfo>() {
             @Override
